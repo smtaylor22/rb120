@@ -41,6 +41,18 @@ class Vehicle
   def self.print_num_vehicles
     puts @@num_of_vehicles
   end
+
+  def age
+    puts "This #{model} is #{calc_age} years old."
+  end
+
+  private
+
+  def calc_age
+    Time.now.year - year
+  end
+
+
 end
 
 module Freight
@@ -71,27 +83,35 @@ end
 
 
 tacoma = MyTruck.new(1998, 'Silver', 'Tacoma')
+subaru = MyCar.new(2005, 'Red', "Forester")
 
-puts tacoma.speed
+tacoma.age
+# tacoma.age
+# puts tacoma.speed
 
-tacoma.speed_up(10)
-tacoma.speed
+# tacoma.speed_up(10)
+# tacoma.speed
 
-puts tacoma.color
-tacoma.color = "Yellow"
-puts tacoma.color
-puts tacoma.year
+# puts tacoma.color
+# tacoma.color = "Yellow"
+# puts tacoma.color
+# puts tacoma.year
 
-tacoma.spray_paint('Black')
-puts tacoma.color
+# tacoma.spray_paint('Black')
+# puts tacoma.color
 
-puts tacom
+# tacoma.load_freight("apples")
 
-subaur = MyCar.new(2005, 'Red', "Forester")
+# MyCar.calc_mileage(60, 12)
 
-MyCar.calc_mileage(60, 12)
-
-puts tacoma
+# puts tacoma
 
 
-Vehicle.print_num_vehicles
+# Vehicle.print_num_vehicles
+
+# puts
+# puts MyCar.ancestors
+# puts
+# puts MyTruck.ancestors
+# puts 
+# puts Vehicle.ancestors
