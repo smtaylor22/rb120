@@ -43,6 +43,11 @@ class Vehicle
   end
 end
 
+module Freight
+  def load_freight(item)
+    puts "Loading #{item} on pickup."
+  end
+end
 
 class MyCar < Vehicle
 
@@ -56,6 +61,7 @@ end
 
 
 class MyTruck < Vehicle
+  include Freight
   NUM_OF_DOORS = 4
 
   def to_s
@@ -78,6 +84,8 @@ puts tacoma.year
 
 tacoma.spray_paint('Black')
 puts tacoma.color
+
+puts tacom
 
 subaur = MyCar.new(2005, 'Red', "Forester")
 
