@@ -1,22 +1,15 @@
-class Dog
-  attr_reader :nickname
-
-  def initialize(n)
-    @nickname = n
+class Person
+  def name
+    @first_name + ' ' + @last_name
   end
-
-  def change_nickname(n)
-    @nickname = n
+  def name=(name)
+    full_name = name.split
+    @first_name = full_name.first
+    @last_name = full_name.last
   end
-
-  def greeting
-    "#{nickname.capitalize} says Woof Woof!"
-  end
-
-  private
-    attr_writer :nickname
 end
 
-dog = Dog.new("rex")
-dog.change_nickname("barny") # changed nickname to "barny"
-puts dog.greeting # Displays: Barny says Woof Woof!
+person1 = Person.new
+
+person1.name = 'John Doe'
+puts person1.name
