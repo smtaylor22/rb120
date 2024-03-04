@@ -121,3 +121,9 @@ end
 
 banner = Banner.new("hello", 10)
 puts banner
+
+banner = Banner.new("hello", 11)
+puts banner
+
+banner = Banner.new("hello", 12)
+puts banner
