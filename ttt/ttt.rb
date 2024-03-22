@@ -1,6 +1,8 @@
-# Board Class Def
+# frozen_string_literal: true
 
+# class for board state
 class Board
+  ##
   WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] + # rows
                   [[1, 4, 7], [2, 5, 8], [3, 6, 9]] + # cols
                   [[1, 5, 9], [3, 5, 7]]              # diagonals
@@ -53,6 +55,7 @@ class Board
     puts "  #{@squares[7]}  |  #{@squares[8]}  |  #{@squares[9]}"
     puts '     |     |'
   end
+  # rubocop:enable all
 
   private
 
@@ -64,8 +67,9 @@ class Board
   end
 end
 
+# class representing for square state and behavior
 class Square
-  INITIAL_MARKER = ' '.freeze
+  INITIAL_MARKER = ' '
 
   attr_accessor :marker
 
@@ -86,27 +90,72 @@ class Square
   end
 end
 
+# Class for Player state
 class Player
   attr_reader :marker
 
-  def initialize(marker)
-    @marker = marker
+  def initialize(computer: false)
+    @marker = computer ? marker : choose_human_marker
+    @name = set_human_name
+  end
+
+
+end
+
+
+class Human < Player
+  def choose_marker
+    puts 'Choose your marker: type "X" or "O".'
+    loop do
+      marker = gets.chomp.upcase
+      return marker if marker == 'X' || marker == 'O'
+      puts 'Invalid marker: Choose "X" or "O"'
+    end
+  end
+
+end
+
+class Computer < Player
+
+
+end
+
+# Module for simple player greeting messages
+module SimpleMessages
+  def display_welcome_message
+    puts 'Welcome to Tic Tac Toe!'
+    puts ''
+  end
+
+  def display_goodbye_message
+    puts 'Thanks for playing Tic Tac Toe! Goodbye!'
+  end
+
+  def display_play_again_message
+    puts "Let's play again!"
+    puts ''
   end
 end
 
+# Class for playing actual game, contains state and game methods
 class TTTGame
-  HUMAN_MARKER = 'X'.freeze
-  COMPUTER_MARKER = 'O'.freeze
-  FIRST_TO_MOVE = HUMAN_MARKER
 
-  attr_reader :board, :human, :computer
+  # HUMAN_MARKER = 'X'
+  # COMPUTER_MARKER = 'O'
+  # FIRST_TO_MOVE = @human.marker
+
+  attr_reader :board, :human, :computer, :org_marker
+
+  include SimpleMessages
 
   def initialize
     @board = Board.new
-    @human = Player.new(HUMAN_MARKER)
-    @computer = Player.new(COMPUTER_MARKER)
-    @current_marker = FIRST_TO_MOVE
+    @human = Player.new
+    @computer = Player.new
+    @current_marker = human.marker
+    @org_marker = human.marker # human is default first player
   end
+
 
   def play
     clear
@@ -123,6 +172,7 @@ class TTTGame
       player_move
       display_result
       break unless play_again?
+
       reset
       display_play_again_message
     end
@@ -137,22 +187,13 @@ class TTTGame
     end
   end
 
-  def display_welcome_message
-    puts 'Welcome to Tic Tac Toe!'
-    puts ''
-  end
-
-  def display_goodbye_message
-    puts 'Thanks for playing Tic Tac Toe! Goodbye!'
-  end
-
   def clear_screen_and_display_board
     clear
     display_board
   end
 
   def human_turn?
-    @current_marker == HUMAN_MARKER
+    @current_marker == human.marker
   end
 
   def display_board
@@ -182,10 +223,10 @@ class TTTGame
   def current_player_moves
     if human_turn?
       human_moves
-      @current_marker = COMPUTER_MARKER
+      @current_marker = computer.marker
     else
       computer_moves
-      @current_marker = HUMAN_MARKER
+      @current_marker = human.marker
     end
   end
 
@@ -207,7 +248,7 @@ class TTTGame
     loop do
       puts 'Would you like to play again? (y/n)'
       answer = gets.chomp.downcase
-      break if %w(y n).include? answer
+      break if %w[y n].include? answer
 
       puts 'Sorry, must be y or n'
     end
@@ -221,15 +262,11 @@ class TTTGame
 
   def reset
     board.reset
-    @current_marker = FIRST_TO_MOVE
+    @current_marker = org_marker
     clear
-  end
-
-  def display_play_again_message
-    puts "Let's play again!"
-    puts ''
   end
 end
 
 game = TTTGame.new
 game.play
+
