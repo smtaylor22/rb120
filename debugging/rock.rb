@@ -1,4 +1,4 @@
-class AuthenticationError < Exception; end
+class AuthenticationError < StandardError; end
 
 # A mock search engine
 # that returns a random number instead of an actual count.
@@ -25,37 +25,32 @@ module DoesItRock
 
   class Score
     def self.for_term(term)
-      begin
         positive = SearchEngine.count(%{"#{term} rocks"}, API_KEY)
         negative = SearchEngine.count(%{"#{term} is not fun"}, API_KEY)
 
         (positive * 100) / (positive + negative)
-      rescue Exception
-        NoScore
-      end
+    rescue Exception
+      NoScore.new
     end
   end
 
   def self.find_out(term)
-    begin
-      score = Score.for_term(term)
+    score = Score.for_term(term)
 
-      case score
-      when NoScore
-        "No idea about #{term}..."
-      when 0...40
-        "#{term} is not fun."
-      when 40...60
-        "#{term} seems to be ok..."
-      else
-        "#{term} rocks!"
-      end
-    rescue Exception => e
-      e.message
+    case score
+    when NoScore
+      "No idea about #{term}..."
+    when 0...40
+      "#{term} is not fun."
+    when 40...60
+      "#{term} seems to be ok..."
+    else
+      "#{term} rocks!"
     end
+  rescue StandardError => e
+    e.message
   end
 end
-
 # Example (your output may differ)
 
 puts DoesItRock.find_out('Sushi')       # Sushi seems to be ok...
